@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalle de Factura</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+{% block content %}
+<body class="bg-gray-50">
+    <div class="min-h-screen">
+        <!-- Header -->
+        <header class="bg-white border-b border-gray-200">
+            <div class="container mx-auto px-4 py-4">
+                <div class="flex items-center space-x-4">
+                    
+                    <a href="{% url 'proveedores:proveedor' supplier.id %}" class="text-gray-600 hover:text-gray-900">
+                        <i class="fas fa-arrow-left text-xl"></i>
+                    </a>
+                    <h1 class="text-2xl font-bold">Detalle de {{invoice.invoice_number}}</h1>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="container mx-auto px-4 py-8">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <!-- Información Principal -->
+                <div class="lg:col-span-2 space-y-8">
+                    <!-- Información Básica -->
+                    <div class="bg-white rounded-lg border border-gray-200 overflow-hidden">
+                        <div class="px-6 py-4 border-b border-gray-200 bg-gray-50">
+                            <h2 class="text-lg font-semibold">Información de la Factura</h2>
+                        </div>
+                        <div class="p-6">
+                            <div class="grid grid-cols-2 gap-6">
+                                <div>
+                                    <p class="text-sm font-medium text-gray-500">Número de Factura</p>
+                                    <p class="mt-1 text-lg font-semibold">{{invoice.invoice_number}}</p>
+                                </div>
+                                <div>
+                                    <p class="text-sm font-medium text-gray-500">Fecha de Emisión</p>
+                                    <p class="mt-1 text-lg">{{invoice.invoice_date}}</p>
+                                </div>
+                                <div>
+                                    <p class="text-sm font-medium text-gray-500">Monto</p>
+                                    <p class="mt-1 text-lg font-semibold text-green-600">{{invoice.amount}}</p>
+                                </div>
+                                <div>
+                                    <p class="text-sm font-medium text-gray-500">f. electronica </p>
+                                    <span class="mt-1 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium {% if invoice.status_electronics %}bg-green-100 text-green-800{% else %}bg-red-100 text-red-800{% endif %}">
+                                        {% if invoice.status_electronics %}si {% else %}no{% endif %}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Información del Proveedor -->
+                    <div class="bg-white rounded-lg border border-gray-200 overflow-hidden">
+                        <div class="px-6 py-4 border-b border-gray-200 bg-gray-50">
+                            <h2 class="text-lg font-semibold">Información del Proveedor</h2>
+                        </div>
+                        <div class="p-6">
+                            <div class="flex items-center space-x-4">
+                                {% if supplier.logo %}
+                                <img src="{{ supplier.logo.url }}" alt="Logo Proveedor" 
+                                     class="h-16 w-16 object-contain rounded-lg border border-gray-200">
+                                {% else %}
+                                <div class="h-16 w-16 bg-gray-100 flex items-center justify-center rounded-lg border border-gray-200">
+                                    <i class="fas fa-building text-gray-400 text-2xl"></i>
+                                </div>
+                                {% endif %}
+                                <div>
+                                    <h3 class="text-lg font-semibold">{{ supplier.company }}</h3>
+                                    <p class="text-gray-500">{{ supplier.first_name }}</p>
+                                </div>
+                            </div>
+                            <div class="mt-6 grid grid-cols-2 gap-6">
+                                <div>
+                                    <p class="text-sm font-medium text-gray-500">Email</p>
+                                    <p class="mt-1">{{ supplier.email }}</p>
+                                </div>
+                                <div>
+                                    <p class="text-sm font-medium text-gray-500">Teléfono</p>
+                                    <p class="mt-1">{{ supplier.phone }}</p>
+                                </div>
+                                <div class="col-span-2">
+                                    <p class="text-sm font-medium text-gray-500">Dirección</p>
+                                    <p class="mt-1">{{ supplier.address }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Información del Cliente -->
+                    <div class="bg-white rounded-lg border border-gray-200 overflow-hidden">
+                        <div class="px-6 py-4 border-b border-gray-200 bg-gray-50">
+                            <h2 class="text-lg font-semibold">Información del Cliente</h2>
+                        </div>
+                        <div class="p-6">
+                            <div class="grid grid-cols-2 gap-6">
+                                <div>
+                                    <p class="text-sm font-medium text-gray-500">Nombre del Cliente</p>
+                                    <p class="mt-1 text-lg font-semibold">{{ client.first_name }} {{ client.last_name }}</p>
+                                </div>
+                                <div>
+                                    <p class="text-sm font-medium text-gray-500">ID Cliente</p>
+                                    <p class="mt-1">{{ client.id_number }}</p>
+                                </div>
+                                <div>
+                                    <p class="text-sm font-medium text-gray-500">Email</p>
+                                    <p class="mt-1">{{ client.email }}</p>
+                                </div>
+                                <div>
+                                    <p class="text-sm font-medium text-gray-500">Teléfono</p>
+                                    <p class="mt-1">{{ client.phone }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sidebar -->
+                <div class="lg:col-span-1 space-y-8">
+                    <!-- Imagen de la Factura -->
+                    <div class="bg-white rounded-lg border border-gray-200 overflow-hidden">
+                        <div class="px-6 py-4 border-b border-gray-200 bg-gray-50">
+                            <h2 class="text-lg font-semibold">Imagen de la Factura</h2>
+                        </div>
+                        <div class="p-6">
+                            {% if invoice.image %}
+                            <img src="{{ invoice.image.url }}" alt="Factura"
+                                 class="w-full rounded-lg border border-gray-200 cursor-pointer hover:opacity-75 transition-opacity"
+                                 onclick="openImageModal(this.src)">
+                            <div class="mt-4 flex justify-center">
+                                <a href="{{ invoice.image.url }}" download class="flex items-center space-x-2 text-blue-600 hover:text-blue-800">
+                                    <i class="fas fa-download"></i>
+                                    <span>Descargar Factura</span>
+                                </a>
+                            </div>
+                            {% else %}
+                            <div class="w-full h-48 bg-gray-100 rounded-lg border border-gray-200 flex items-center justify-center">
+                                <p class="text-gray-500">No hay imagen disponible</p>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <!-- Acciones -->
+                    <div class="bg-white rounded-lg border border-gray-200 overflow-hidden">
+                        <div class="px-6 py-4 border-b border-gray-200 bg-gray-50">
+                            <h2 class="text-lg font-semibold">Acciones</h2>
+                        </div>
+                        <div class="p-6 space-y-4">
+                            <button onclick="openModal()"
+                                   class="w-full px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 flex items-center justify-center space-x-2">
+                                <i class="fas fa-edit"></i>
+                                <span>Editar Factura</span>
+                            </button>
+                            
+                            <button type="button" 
+                               onclick="openDeleteModal(this)" 
+                               data-id="{{ invoice.id }}" 
+                               data-url="{% url 'proveedores:delete_invoice' invoice.id|add:0 %}"
+
+                               class="w-full px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 flex items-center justify-center space-x-2">
+                               <i class="fas fa-trash"></i>
+                               <span>Eliminar Factura</span>
+                    
+                           </button>
+
+
+
+                            <a href="{% url 'proveedores:download_invoice_pdf' invoice.id %}" class="w-full px-4 py-2 border border-gray-200 rounded-lg hover:bg-gray-50 flex items-center justify-center space-x-2">
+                                <i class="fas fa-file-pdf"></i>
+                                <span>Descargar PDF</span>
+                            </a>
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal para ver imagen -->
+    <div id="imageModal" class="fixed inset-0 bg-black bg-opacity-75 hidden z-50 overflow-auto">
+        <div class="min-h-screen w-full flex items-center justify-center p-4">
+            <div class="relative max-w-[90vw] max-h-[90vh]">
+                <!-- Botón de cerrar -->
+                <button onclick="closeImageModal()" 
+                        class="absolute -top-10 right-0 text-white hover:text-gray-300 p-2">
+                    <i class="fas fa-times text-2xl"></i>
+                </button>
+                
+                <!-- Contenedor de la imagen con scroll -->
+                <div class="overflow-auto max-h-[85vh] bg-white rounded-lg">
+                    <img id="modalImage" 
+                         src="/placeholder.svg" 
+                         alt="Factura" 
+                         class="w-full h-auto">
+                </div>
+            </div>
+        </div>
+    </div>
+
+   <!-- Modal de confirmación para eliminar -->
+<div id="deleteModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center">
+    <div class="bg-white rounded-lg p-6 max-w-sm mx-4">
+        <h3 class="text-lg font-semibold mb-4">Confirmar Eliminación</h3>
+        <p class="text-gray-600 mb-6">¿Estás seguro de que deseas eliminar esta factura? Esta acción no se puede deshacer.</p>
+        <div class="flex justify-end space-x-4">
+            <button onclick="closeDeleteModal()" 
+                    class="px-4 py-2 border border-gray-200 rounded-lg hover:bg-gray-50">
+                Cancelar
+            </button>
+            <form id="deleteForm" method="POST" class="inline">
+                {% csrf_token %}
+                <button type="submit" 
+                        class="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600">
+                    Eliminar
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+// function openDeleteModal(invoiceId, deleteUrl) {
+//     const deleteForm = document.getElementById("deleteForm");
+//     deleteForm.action = deleteUrl; // Asigna la URL correcta al formulario
+//     document.getElementById("deleteModal").classList.remove("hidden");
+    
+// }
+// function openDeleteModal(button) {
+//     console.log("Botón presionado:", button);
+//     console.log("ID:", button.dataset.id);
+//     console.log("URL:", button.dataset.url);
+    
+//     // Verifica si se está pasando correctamente a la solicitud fetch o AJAX
+// }
+function openDeleteModal(button) {
+    const deleteForm = document.getElementById("deleteForm");
+    if (deleteForm) {
+        deleteForm.action = button.dataset.url; // Asigna la URL al formulario
+        console.log("Formulario actualizado:", deleteForm.action);
+    } else {
+        console.error("No se encontró el formulario con ID 'deleteForm'");
+    }
+
+    const modal = document.getElementById("deleteModal");
+    if (modal) {
+        modal.classList.remove("hidden"); // Muestra el modal
+        console.log("Modal abierto");
+    } else {
+        console.error("No se encontró el modal con ID 'deleteModal'");
+    }}
+
+function closeDeleteModal() {
+    document.getElementById("deleteModal").classList.add("hidden");
+}
+</script>
+
+
+    <!-- Modal para editar factura -->
+    <div id="invoiceModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center">
+        <div class="bg-white rounded-lg p-6 max-w-md mx-4 w-full">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-lg font-semibold">Editar Factura</h3>
+                <button onclick="closeModal()" class="text-gray-500 hover:text-gray-700">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div>
+                <form id="editForm" method="POST" action="{% url 'proveedores:edit_invoice' invoice.id %}" enctype="multipart/form-data" class="space-y-4">
+                    {% csrf_token %}
+                    <div>
+                        <label class="block text-sm font-medium mb-1">Número de Factura</label>
+                        <input type="text" name="invoice_number" value="{{ invoice.invoice_number }}" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-1">Cliente</label>
+                        <select name="customer" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            {% for customer in customers %}
+                                <option value="{{ customer.id }}" {% if customer.id == invoice.customer.id %}selected{% endif %}>
+                                    {{ customer.first_name }} {{ customer.last_name }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-1">Monto</label>
+                        <input type="number" name="amount" value="{{ invoice.amount }}" step="0.01" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-1">Fecha</label>
+                        <input type="date" name="invoice_date" value="{{ invoice.invoice_date|date:'Y-m-d' }}" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-1">Factura Electrónica</label>
+                        <select name="status_electronics" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <option value="True" {% if invoice.status_electronics %}selected{% endif %}>Sí</option>
+                            <option value="False" {% if not invoice.status_electronics %}selected{% endif %}>No</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-1">Imagen de Factura</label>
+                        
+                        {% if invoice.image %}
+                        <div class="mb-2">
+                            <p class="text-xs text-gray-500 mb-1">Imagen actual:</p>
+                            <img src="{{ invoice.image.url }}" alt="Imagen actual" class="h-20 object-contain border border-gray-200 rounded-lg">
+                        </div>
+                        {% endif %}
+                        
+                        <label class="block text-sm font-medium mb-1">Sube una imagen</label>
+                    <input type="file" name="image" accept="image/*" required class="w-full px-3 py-2 border border-gray-300 rounded-lg">
+                    <p class="text-xs text-gray-500 mt-1">Este campo es obligatorio.</p>
+                    </div>
+                    <!-- Asegurarse de que el campo de imagen está correctamente configurado -->
+    
+                    <div class="flex justify-end space-x-3">
+                        <button type="button" onclick="closeModal()" class="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">
+                            Cancelar
+                        </button>
+                        <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
+                            Guardar
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script>
+        // Función para mostrar el nombre del archivo seleccionado
+        document.addEventListener('DOMContentLoaded', function() {
+            const fileInput = document.querySelector('input[type="file"]');
+            if (fileInput) {
+                fileInput.addEventListener('change', function() {
+                    const fileName = this.files[0]?.name;
+                    if (fileName) {
+                        const fileLabel = document.createElement('p');
+                        fileLabel.className = 'text-sm text-blue-600 mt-1';
+                        fileLabel.textContent = `Archivo seleccionado: ${fileName}`;
+                        
+                        // Eliminar etiqueta anterior si existe
+                        const prevLabel = this.parentNode.querySelector('.text-blue-600');
+                        if (prevLabel) {
+                            prevLabel.remove();
+                        }
+                        
+                        this.parentNode.appendChild(fileLabel);
+                    }
+                });
+            }
+        });
+    </script>
+    <script>
+        // Funciones para el modal de imagen
+        function openImageModal(src) {
+            const modal = document.getElementById('imageModal');
+            const modalImage = document.getElementById('modalImage');
+            modalImage.src = src;
+            modal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden'; // Previene scroll del body
+        }
+    
+        function closeImageModal() {
+            const modal = document.getElementById('imageModal');
+            modal.classList.add('hidden');
+            document.body.style.overflow = ''; // Restaura el scroll del body
+        }
+    
+        // Cerrar modal al hacer clic fuera de la imagen
+        document.getElementById('imageModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeImageModal();
+            }
+        });
+    
+        // Prevenir que el clic en la imagen cierre el modal
+        document.getElementById('modalImage').addEventListener('click', function(e) {
+            e.stopPropagation();
+        });
+
+        
+
+
+
+        // Funciones para el modal de edición
+        function openModal() {
+            document.getElementById('invoiceModal').classList.remove('hidden');
+            document.getElementById('invoiceModal').classList.add('flex');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            document.getElementById('invoiceModal').classList.add('hidden');
+            document.getElementById('invoiceModal').classList.remove('flex');
+            document.body.style.overflow = '';
+        }
+
+        // Cerrar modal al hacer clic fuera
+        document.getElementById('invoiceModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeModal();
+            }
+        });
+    </script>
+</body>
+{% endblock %}
+</html>

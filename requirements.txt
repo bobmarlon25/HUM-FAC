@@ -1,0 +1,15 @@
+django==3.2
+
+
+
+#mysqlclient
+#django-admin-tailwind
+setuptools     
+psycopg2-binary
+Pillow
+cloudinary
+
+python-decouple
+
+reportlab  
+gunicorn
