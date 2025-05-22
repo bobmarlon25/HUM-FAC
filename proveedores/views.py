@@ -287,15 +287,23 @@ def supplier_list(request):
 def supplier_info(request, supplier_id):
     # Intentar obtener el proveedor
     supplier = Supplier.objects.get(id=supplier_id)
-    
-
     if not supplier:
         # Si el proveedor no existe, renderizar una página de error personalizada
         return render(request, 'error.html', {'message': 'El proveedor no existe.'}, status=404)
-
     # Obtener todas las facturas asociadas a ese proveedor
-    invoices = Invoice.objects.filter(supplier=supplier).order_by('id')  # Orden ascendente por ID
-    paginated = Paginator(invoices, 2)
+    invoices = Invoice.objects.filter(supplier=supplier).order_by('invoice_date')  # Orden ascendente por ID
+    
+
+    
+
+    if request.method=='POST':
+        nombre=request.POST['nombre']
+        invoices=invoices.filter(invoice_number__icontains=nombre)
+
+
+
+
+    paginated = Paginator(invoices, 10)
     page_number = request.GET.get('page') #Get the requested page number from the URL
     
     page_invoices = paginated.get_page(page_number)
@@ -481,4 +489,36 @@ def SaveSupplier(request):
         
     
     return redirect('proveedores:proveedores')
+
+
+def buscador(request,id):
+    nombre=request.POST['nombre']
+    supplier = Supplier.objects.get(id=id)
+
+    listadefactura=Invoice.objects.filter(invoice_number__icontains=nombre)
+   
+    
+
+   
+
+
+    paginated = Paginator(listadefactura,10)
+    page_number = request.GET.get('page') #Get the requested page number from the URL
+    
+    page_invoices = paginated.get_page(page_number)
+
+
+
+    customer=Customer.objects.all()
+    
+
+    # Pasar los datos al template
+    context = {
+        'supplier':supplier,
+        'page':page_invoices,
+        'customers': customer,
+    }
+
+    return render(request, 'Invoice.html', context)
+
  

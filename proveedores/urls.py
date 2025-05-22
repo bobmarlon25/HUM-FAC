@@ -15,7 +15,8 @@ urlpatterns = [
    path('invoice/<int:invoice_id>/edit/', views.edit_invoice, name='edit_invoice'),
     path('invoice/delete_invoice/<int:invoice_id>/', views.delete_invoice, name='delete_invoice'),
     path('proceedor/<int:supplier_id>/saveInvoice/', views.SaveInvoice, name='saveInvoice'),
-    path('savesupplier', views.SaveSupplier, name='savesupplier')
+    path('savesupplier', views.SaveSupplier, name='savesupplier'),
+    path('buscador/<int:id>/', views.buscador, name='buscador')
     
 ]
 
